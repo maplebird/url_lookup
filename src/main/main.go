@@ -10,17 +10,24 @@ import (
 func parseRequest(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	path := r.URL.Path
-	var requested_url string = strings.Replace(path, "/1/urlinfo/", "", 1)
+	var requestedUrl string = strings.Replace(path, "/1/urlinfo/", "", 1)
 
-	lookupUrl(requested_url)
+	lookupUrl(requestedUrl)
 }
 
-func lookupUrl(requested_url string) string {
-	fmt.Println("Looking up this URL: ", requested_url)
-	return requested_url
+func lookupUrl(requestedUrl string) string {
+	fmt.Println("Looking up this URL: ", requestedUrl)
+	return requestedUrl
 }
 
 func main() {
+	dbConfig := getDbConfig("config.properties")
+
+	fmt.Println("DB host: ", dbConfig.host)
+	fmt.Println("DB port: ", dbConfig.port)
+	fmt.Println("DB schema: ", dbConfig.schema)
+	fmt.Println("DB user: ", dbConfig.user)
+
 	http.HandleFunc("/1/urlinfo/", parseRequest)
 	err := http.ListenAndServe(":5000", nil)
 	if err != nil {
