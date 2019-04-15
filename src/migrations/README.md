@@ -13,6 +13,12 @@ IDENTIFIED  BY 'password';
 * In this project in `src/main/migrations/01_create_default_schema.sql`
 * Execute against local MySQL host
 
+3. Grant user permissions to read data
+
+```sql
+GRANT SELECT ON url_lookup.* TO `url_lookup_ro`@`127.0.0.1`;
+``` 
+
 If you wish to use a remote database (MySQL only), update `src/main/config.properties` with your database info
 
 ```

@@ -11,10 +11,6 @@ import (
 func getConnString() (connString string) {
 	dbConfig := getDbConfig("config.properties")
 
-	log.Println("Initializing new database connection")
-	log.Printf("DB host: %s:%s\n", dbConfig.Host, dbConfig.Port)
-	log.Println("DB schema: ", dbConfig.Schema)
-
 	connString = fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8",
 		dbConfig.User, dbConfig.Password, dbConfig.Host, dbConfig.Port, dbConfig.Schema)
 
@@ -23,6 +19,8 @@ func getConnString() (connString string) {
 
 // Create new database connection that can be passed to different methods
 func getDbConn() (db *sql.DB) {
+	log.Println("Initializing new database connection")
+
 	var err error
 	connString := getConnString()
 	db, err = sql.Open("mysql", connString)
@@ -31,27 +29,21 @@ func getDbConn() (db *sql.DB) {
 }
 
 // Test database connection is working before starting the application
+// Test database
+// Expects at least 1 row in url_lookup.fqdns table
 func testDbConn(db *sql.DB) (bool) {
-	var output string
+	var fqdn string
+	var reputation string
 
-	//Test database
-	//Expects at least 1 row in url_lookup.fqdns table
-	rows, err := db.Query("SELECT * FROM fqdns LIMIT 1")
+	err := db.QueryRow("SELECT * FROM fqdns LIMIT 1").Scan(&fqdn, &reputation)
 	checkErr(err)
 
-	for rows.Next() {
-		var fqdn string
-		var reputation string
-		err = rows.Scan(&fqdn, &reputation)
-		output = fqdn + reputation
-	}
-
-	if output != "" {
+	log.Println("Selected 1 row from database: ", fqdn, reputation)
+	if fqdn != "" {
 		return true
 	}
 	return false
 }
-
 
 
 

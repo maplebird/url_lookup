@@ -22,7 +22,7 @@ CREATE TABLE url_lookup.path_lookup (
 INSERT INTO url_lookup.fqdns (fqdn, reputation) VALUES
 ('www.github.com', 'safe'),
 ('get.dogecoin.com', 'unsafe'),
-('www.megaupload.com', 'varies');
+('www.megaupload.com', 'mixed');
 
 INSERT INTO url_lookup.path_lookup (fqdn, path, reputation) VALUES
 ('www.megaupload.com', '/files/not_a_virus', 'safe'),
