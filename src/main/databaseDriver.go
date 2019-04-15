@@ -7,6 +7,7 @@ import (
 	"log"
 )
 
+// Parse properties file and create database connection string
 func getConnString() (connString string) {
 	dbConfig := getDbConfig("config.properties")
 
@@ -20,38 +21,16 @@ func getConnString() (connString string) {
 	return connString
 }
 
+// Create new database connection that can be passed to different methods
 func getDbConn() (db *sql.DB) {
 	var err error
 	connString := getConnString()
 	db, err = sql.Open("mysql", connString)
 	checkErr(err)
-
 	return db
-
-
 }
 
-//func dbQuery(query string) (queryResult string) {
-//	var db *sql.DB
-//	var err error
-//	connString := getConnString()
-//	db, err = sql.Open("mysql", connString)
-//	checkErr(err)
-//
-//	rows, err := db.Query(query)
-//	checkErr(err)
-//
-//	db.Close()
-//
-//	for rows.Next() {
-//		var fqdn string
-//		var reputation string
-//		err = rows.Scan(&fqdn, &reputation)
-//		fmt.Println(fqdn, reputation)
-//	}
-//}
-
-
+// Test database connection is working before starting the application
 func testDbConn(db *sql.DB) (bool) {
 	var output string
 

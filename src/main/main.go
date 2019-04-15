@@ -1,10 +1,9 @@
 package main
 
 import (
-	"database/sql"
 	"fmt"
-	"net/http"
 	"log"
+	"net/http"
 	"strings"
 )
 
@@ -27,12 +26,14 @@ func lookupUrl(requestedUrl string) (reputation string) {
 	return requestedUrl
 }
 
+// Basic error handling function
 func checkErr(err error) {
 	if err != nil {
 		panic(err)
 	}
 }
 
+// Start web server
 func router() {
 	serverConfig := getServerConfig("config.properties")
 	listenAddress := fmt.Sprintf("%s:%s", serverConfig.ServerAddress, serverConfig.ServerPort)
@@ -50,11 +51,14 @@ func router() {
 
 
 func main() {
-	var db *sql.DB = getDbConn()
+	var db = getDbConn()
+
+	// Test database connection before starting server
 	if testDbConn(db){
 		log.Println("Successfully connected to database")
 	}else {
 		log.Fatal("ERROR: Cannot connect to databse. Exiting.")
 	}
+
 	router()
 }
