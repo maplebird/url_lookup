@@ -12,21 +12,29 @@ func parseRequest(w http.ResponseWriter, r *http.Request) {
 	path := r.URL.Path
 	var requestedUrl string = strings.Replace(path, "/1/urlinfo/", "", 1)
 
+	log.Println("Looking up URL: ", requestedUrl)
 	lookupUrl(requestedUrl)
 }
 
-func lookupUrl(requestedUrl string) string {
+func lookupUrl(requestedUrl string) (reputation string) {
 	fmt.Println("Looking up this URL: ", requestedUrl)
+
+	query := fmt.Sprint(`SELECT reputation FROM fqdns WHERE fqdn = "%s"`, requestedUrl)
+
+	reputation = dbQuery(query)
+
 	return requestedUrl
 }
 
-func main() {
-	dbConfig := getDbConfig("config.properties")
+func checkErr(err error) {
+	if err != nil {
+		panic(err)
+	}
+}
 
-	fmt.Println("DB host: ", dbConfig.host)
-	fmt.Println("DB port: ", dbConfig.port)
-	fmt.Println("DB schema: ", dbConfig.schema)
-	fmt.Println("DB user: ", dbConfig.user)
+func main() {
+
+	dbInit()
 
 	http.HandleFunc("/1/urlinfo/", parseRequest)
 	err := http.ListenAndServe(":5000", nil)
