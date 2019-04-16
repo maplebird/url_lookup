@@ -56,14 +56,16 @@ func checkReputation(parsedUrl candidateUrl) (reputation string) {
 		reputation = checkMixedReputation(parsedUrl, db)
 	}
 
-	db.Close()
+	err = db.Close()
+	logErr(err)
 
 	return reputation
 }
 
 func checkMixedReputation(parsedUrl candidateUrl, db *sql.DB) (reputation string) {
-	var query = fmt.Sprintf("SELECT reputation FROM path_lookup WHERE fqdn = '%s' AND path = '%s'", parsedUrl.fqdn, parsedUrl.path)
-	log.Println(query)
+	var query = fmt.Sprintf(
+		"SELECT reputation FROM path_lookup WHERE fqdn = '%s' AND path = '%s'",
+		parsedUrl.fqdn, parsedUrl.path)
 
 	err := db.QueryRow(query).Scan(&reputation)
 	if err == sql.ErrNoRows {

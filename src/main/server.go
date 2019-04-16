@@ -26,22 +26,19 @@ func processRequest(w http.ResponseWriter, r *http.Request) {
 	log.Println("Looking up URL: ", requestedUrl)
 	reputation = lookupUrl(requestedUrl)
 
-	createResponse(requestedUrl, reputation)
-
-	//fmt.Fprint(w, createResponse(requestedUrl,  reputation))
+	fmt.Fprint(w, createResponse(requestedUrl,  reputation))
 }
 
-func createResponse(requestedUrl string, reputation string) {
+func createResponse(requestedUrl string, reputation string) (restResponse []byte) {
 	output := response{
 		RequestedUrl: requestedUrl,
 		Reputation: reputation,
 	}
 
-	log.Println(output)
-
-	resp1, err := json.Marshal(output)
+	restResponse, err := json.Marshal(output)
 	logErr(err)
-	log.Println(resp1)
+
+	return restResponse
 }
 
 
