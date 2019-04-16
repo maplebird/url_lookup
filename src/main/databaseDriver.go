@@ -24,7 +24,7 @@ func getDbConn() (db *sql.DB) {
 	var err error
 	connString := getConnString()
 	db, err = sql.Open("mysql", connString)
-	checkErr(err)
+	fatalErr(err)
 	return db
 }
 
@@ -36,7 +36,9 @@ func testDbConn(db *sql.DB) (bool) {
 	var reputation string
 
 	err := db.QueryRow("SELECT * FROM fqdns LIMIT 1").Scan(&fqdn, &reputation)
-	checkErr(err)
+	fatalErr(err)
+
+	db.Close()
 
 	log.Println("Selected 1 row from database: ", fqdn, reputation)
 	if fqdn != "" {
