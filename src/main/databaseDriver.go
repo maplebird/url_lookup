@@ -19,8 +19,6 @@ func getConnString() (connString string) {
 
 // Create new database connection that can be passed to different methods
 func getDbConn() (db *sql.DB) {
-	log.Println("Initializing new database connection")
-
 	var err error
 	connString := getConnString()
 	db, err = sql.Open("mysql", connString)
@@ -35,6 +33,7 @@ func testDbConn(db *sql.DB) (bool) {
 	var fqdn string
 	var reputation string
 
+	log.Println("Initializing new database connection")
 	err := db.QueryRow("SELECT * FROM fqdns LIMIT 1").Scan(&fqdn, &reputation)
 	fatalErr(err)
 

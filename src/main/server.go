@@ -29,16 +29,16 @@ func processRequest(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, createResponse(requestedUrl,  reputation))
 }
 
-func createResponse(requestedUrl string, reputation string) (restResponse []byte) {
+func createResponse(requestedUrl string, reputation string) (restResponse string) {
 	output := response{
 		RequestedUrl: requestedUrl,
 		Reputation: reputation,
 	}
 
-	restResponse, err := json.Marshal(output)
+	restResponseEncoded, err := json.Marshal(output)
 	logErr(err)
 
-	return restResponse
+	return string(restResponseEncoded)
 }
 
 
