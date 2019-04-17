@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-type response struct {
+type urlInfo struct {
 	RequestedUrl string
 	Reputation string
 }
@@ -30,7 +30,7 @@ func processRequest(w http.ResponseWriter, r *http.Request) {
 }
 
 func createResponse(requestedUrl string, reputation string) (restResponse string) {
-	output := response{
+	output := urlInfo{
 		RequestedUrl: requestedUrl,
 		Reputation: reputation,
 	}

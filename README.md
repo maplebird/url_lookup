@@ -1,3 +1,7 @@
+# url_lookup
+
+I used this as an excuse to learn GoLang :)
+
 # Requirements
  * Linux or OS X
  * Docker
@@ -10,7 +14,9 @@ Make sure to configure remote database using the steps in its corresponding sect
 
 This was tested using MySQL 5.7 and 8.0, however 5.6 should work fine.
  
-# Set up a test environment
+# Setting up a test environment
+
+## Easy option
 
 Make sure your Docker daemon is started.
 
@@ -19,15 +25,17 @@ In the main folder, run build_test_database.sh
 
 `./build_test_database.sh`
 
-Then start test server
+If you do not wish to automatically create a test database, follow the steps to set up a database from the next section.
+
+Start the test server.
 
 `./start_test_server.sh`
 
-You should now be able to hit the API.
+You should now be able to hit the API (see [Using URL Lookup](#using-url_lookup) for instructions)
 
 Make sure to cleanup at the end by running `./cleanup.sh`.  This will delete any build artifacts and test database container.
 
-# Database setup if not using Docker script.
+## Database setup if not using Docker script.
 
 Follow the steps below to configure database required for url_lookup if not using test Docker database
 
@@ -76,7 +84,7 @@ Reputation comes in 4 categories:
 
 By default, it is configured to listen on port 5000 and can be accessed as such.
 
-### Querying url_lookup
+## Querying url_lookup
 
 url_lookup can be accessed at the following URL:
 
@@ -100,7 +108,7 @@ It returns a JSON object with the following structure:
 }
 ```
 
-#### Scheme in lookup request
+### Scheme in lookup request
 
 Including scheme in your request, such as
  
@@ -110,7 +118,7 @@ Is **NOT** supported.
 
 Please strip out scheme portion of the URL before querying it.
 
-#### Ports in lookup request
+### Ports in lookup request
 
 Ports are supported, but any ports are considered separate websites entirely
 and need to be added to the database separately.
@@ -123,7 +131,7 @@ and
 
 `www.megaupload.com:443/files/my_virus`
 
-Are considered separate objects.
+Are two separate websites entirely as far as url_lookup is concerned.
 
 For best results, only store base FQDN and object paths of any website added to the database,
 but exclude port.  Then, when querying url_lookup, remove port from your lookup.
@@ -142,7 +150,7 @@ Current schema is very simple, with only two tables: `fqdns`, and `path_lookup`.
 
 Schema looks like this:
 
-```sql
+```
 +--------------------+------------+
 | fqdn               | reputation |
 +--------------------+------------+
@@ -154,7 +162,7 @@ Schema looks like this:
 
 `path_lookup` stores a list of full object paths for any FQDNs defined in `fqdns` with a mixed reputation.
 
-```sql
+```
 +----+--------------------+--------------------+------------+
 | id | fqdn               | path               | reputation |
 +----+--------------------+--------------------+------------+

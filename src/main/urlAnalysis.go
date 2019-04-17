@@ -32,7 +32,8 @@ func parseRequestedUrl(requestedUrl string) candidateUrl {
 func lookupUrl(requestedUrl string) (reputation string) {
 	var parsedUrl candidateUrl
 	parsedUrl = parseRequestedUrl(requestedUrl)
-	return checkReputation(parsedUrl)
+	reputation = checkReputation(parsedUrl)
+	return reputation
 }
 
 func checkReputation(parsedUrl candidateUrl) (reputation string) {
