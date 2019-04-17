@@ -8,4 +8,4 @@ HERE=$(pwd)
 cd src/main
 go build
 
-./main >> ${HERE}/server.log 2>&1
+./main
