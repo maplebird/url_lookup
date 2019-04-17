@@ -172,7 +172,7 @@ Schema looks like this:
 +----+--------------------+--------------------+------------+
 ```
 
-#### Adding new websites to the database
+### Adding new websites to the database
 
 If a website has a known safe or unsafe reputation, it only needs to be stored in `fqdns` table.
 
@@ -191,4 +191,10 @@ INSERT INTO path_lookup (fqdn, path, reputation) VALUES
 ('my-host.com', '/link/to/safe/object', 'safe'),
 ('my-host.com', '/link/to/unsafe/object', 'unsafe');
 ```
+
+# Random notes
+
+### Tabs vs. Spaces
+
+I'm a spaces guy, but my IDE saved all my tab strokes as tabs instead of 4 spaces, and I was too lazy to change it.
 

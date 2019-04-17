@@ -9,7 +9,7 @@ CREATE TABLE url_lookup.fqdns (
 
 CREATE TABLE url_lookup.path_lookup (
     id int NOT NULL AUTO_INCREMENT,
-    fqdn VARCHAR(200),
+    fqdn VARCHAR(200) NOT NULL,
     path VARCHAR(200),
     reputation CHAR(25) NOT NULL DEFAULT 'unknown',
     INDEX (fqdn, path),
