@@ -35,9 +35,14 @@ echo "Testing database connection."
 if ! mysql -h 127.0.0.1 -uroot -ppassword -e "show databases;"; then
     echo "Could not connect to database.  Most likely container did not start in time."
     echo "Try increasing timeout above to a larger value, like 60 seconds."
+    exit 1
+else
+    echo "Successfully connected to test database.  Executing migrations."
+    MIGRATIONS=$(ls src/migrations/*.sql)
+    for MIGRATION in ${MIGRATIONS}; do
+        echo "Running database schema migration ${MIGRATION}"
+        mysql -h 127.0.0.1 -uroot -p${MYSQL_ROOT_PASSWORD} < ${MIGRATION}
+    done
+fi
 
-MIGRATIONS=$(ls src/migrations/*.sql)
-for MIGRATION in ${MIGRATIONS}; do
-    echo "Running database schema migration ${MIGRATION}"
-    mysql -h 127.0.0.1 -uroot -p${MYSQL_ROOT_PASSWORD} < ${MIGRATION}
-done
+
