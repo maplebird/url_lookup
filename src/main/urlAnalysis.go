@@ -76,5 +76,8 @@ func checkMixedReputation(parsedUrl candidateUrl, db *sql.DB) (reputation string
 		log.Println("Full URL reputation: ", reputation)
 	}
 
+	err = db.Close()
+	logErr(err)
+
 	return reputation
 }

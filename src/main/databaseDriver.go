@@ -7,21 +7,23 @@ import (
 	"log"
 )
 
+// Use connection string as global variable so properties file isn't read every time db connection is called
+var dbConnectionString = getConnectionString()
+
 // Parse properties file and create database connection string
-func getConnString() (connString string) {
+func getConnectionString() (dbConnectionString string) {
 	dbConfig := getDbConfig("config.properties")
 
-	connString = fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8",
+	dbConnectionString = fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8",
 		dbConfig.User, dbConfig.Password, dbConfig.Host, dbConfig.Port, dbConfig.Schema)
 
-	return connString
+	return dbConnectionString
 }
 
 // Create new database connection that can be passed to different methods
 func getDbConn() (db *sql.DB) {
 	var err error
-	connString := getConnString()
-	db, err = sql.Open("mysql", connString)
+	db, err = sql.Open("mysql", dbConnectionString)
 	fatalErr(err)
 	return db
 }
@@ -37,9 +39,10 @@ func testDbConn(db *sql.DB) (bool) {
 	err := db.QueryRow("SELECT * FROM fqdns LIMIT 1").Scan(&fqdn, &reputation)
 	fatalErr(err)
 
-	db.Close()
+	err = db.Close()
+	fatalErr(err)
 
-	log.Println("Selected 1 row from database: ", fqdn, reputation)
+	log.Println("Selected 1 row from database: ", fqdn, " ", reputation)
 	if fqdn != "" {
 		return true
 	}

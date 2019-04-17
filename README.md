@@ -54,11 +54,11 @@ Where HOST is your database host and USER is your database user.
 If you wish to use a database on a remote host or non-standard port, update `src/main/config.properties` with your configuration
 
 ```
-dbProperties.host = 127.0.0.1
-dbProperties.port = 3306
-dbProperties.schema = url_lookup
-dbProperties.user = url_lookup_ro
-dbProperties.password = password
+Host = 127.0.0.1
+Port = 3306
+Schema = url_lookup
+User = url_lookup_ro
+Password = password
 ```
 
 ### Important note
