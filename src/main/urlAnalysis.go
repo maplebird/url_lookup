@@ -15,12 +15,12 @@ type candidateUrl struct {
 func parseRequestedUrl(requestedUrl string) candidateUrl {
 	var parsedUrl candidateUrl
 
-	var if_has_path int
-	if_has_path = strings.IndexAny(requestedUrl, "/")
+	var urlPathSeparatorIndex int
+	urlPathSeparatorIndex = strings.IndexAny(requestedUrl, "/")
 
-	if if_has_path > 0 {
-		parsedUrl.fqdn = requestedUrl[:if_has_path]
-		parsedUrl.path = requestedUrl[if_has_path:]
+	if urlPathSeparatorIndex > 0 {
+		parsedUrl.fqdn = requestedUrl[:urlPathSeparatorIndex]
+		parsedUrl.path = requestedUrl[urlPathSeparatorIndex:]
 	} else {
 		parsedUrl.fqdn = requestedUrl
 		parsedUrl.path = ""
