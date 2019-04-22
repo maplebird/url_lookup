@@ -8,9 +8,9 @@ func main() {
 	var db = getDbConn()
 
 	// Test database connection before starting server
-	if testDbConn(db){
+	if testDbConn(db) {
 		log.Println("Successfully connected to database")
-	}else {
+	} else {
 		log.Fatal("ERROR: Cannot connect to databse. Exiting.")
 	}
 

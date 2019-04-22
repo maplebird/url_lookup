@@ -10,7 +10,7 @@ import (
 
 type urlInfo struct {
 	RequestedUrl string
-	Reputation string
+	Reputation   string
 }
 
 func processRequest(w http.ResponseWriter, r *http.Request) {
@@ -26,13 +26,13 @@ func processRequest(w http.ResponseWriter, r *http.Request) {
 	log.Println("Looking up URL: ", requestedUrl)
 	reputation = lookupUrl(requestedUrl)
 
-	fmt.Fprint(w, createResponse(requestedUrl,  reputation))
+	fmt.Fprint(w, createResponse(requestedUrl, reputation))
 }
 
 func createResponse(requestedUrl string, reputation string) (restResponse string) {
 	output := urlInfo{
 		RequestedUrl: requestedUrl,
-		Reputation: reputation,
+		Reputation:   reputation,
 	}
 
 	restResponseEncoded, err := json.Marshal(output)
@@ -41,15 +41,14 @@ func createResponse(requestedUrl string, reputation string) (restResponse string
 	return string(restResponseEncoded)
 }
 
-
 // Start web server
 func router() {
-	serverConfig := getServerConfig("config.properties")
-	listenAddress := fmt.Sprintf("%s:%s", serverConfig.ServerAddress, serverConfig.ServerPort)
+	config := getConfig("config.properties")
+	listenAddress := fmt.Sprintf("%s:%s", config.ServerAddress, config.ServerPort)
 
 	log.Println("Initializing URL Lookup server")
-	log.Println(fmt.Sprintf("Listening on %s address (will listen on all interfaces if empty)", serverConfig.ServerAddress))
-	log.Println("Listening on port ", serverConfig.ServerPort)
+	log.Println(fmt.Sprintf("Listening on %s address (will listen on all interfaces if empty)", config.ServerAddress))
+	log.Println("Listening on port ", config.ServerPort)
 
 	http.HandleFunc("/1/urlinfo/", processRequest)
 	err := http.ListenAndServe(listenAddress, nil)

@@ -12,10 +12,10 @@ var dbConnectionString = getConnectionString()
 
 // Parse properties file and create database connection string
 func getConnectionString() (dbConnectionString string) {
-	dbConfig := getDbConfig("config.properties")
+	config := getConfig("config.properties")
 
 	dbConnectionString = fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8",
-		dbConfig.User, dbConfig.Password, dbConfig.Host, dbConfig.Port, dbConfig.Schema)
+		config.DBUser, config.DBPassword, config.DBHost, config.DBPort, config.DBSchema)
 
 	return dbConnectionString
 }
@@ -31,7 +31,7 @@ func getDbConn() (db *sql.DB) {
 // Test database connection is working before starting the application
 // Test database
 // Expects at least 1 row in url_lookup.fqdns table
-func testDbConn(db *sql.DB) (bool) {
+func testDbConn(db *sql.DB) bool {
 	var fqdn string
 	var reputation string
 
@@ -48,8 +48,3 @@ func testDbConn(db *sql.DB) (bool) {
 	}
 	return false
 }
-
-
-
-
-

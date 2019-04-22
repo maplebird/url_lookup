@@ -2,37 +2,29 @@ package main
 
 import (
 	"github.com/magiconair/properties"
+	"os"
 )
 
-type dbConfig struct {
-	Host     string
-	Port     string
-	Schema   string
-	User     string
-	Password string
-}
-
-type serverConfig struct {
+type config struct {
+	DBHost        string
+	DBPort        string
+	DBSchema      string
+	DBUser        string
+	DBPassword    string
 	ServerAddress string
-	ServerPort string
+	ServerPort    string
 }
 
-func getDbConfig(filename string) dbConfig {
-	props := properties.MustLoadFile(filename, properties.UTF8)
-
-	var dbConfig dbConfig
-	err := props.Decode(&dbConfig)
-	fatalErr(err)
-
-	return dbConfig
+func getEnvVars(envVar string) string {
+	return os.Getenv(envVar)
 }
 
-func getServerConfig(filename string) serverConfig {
+func getConfig(filename string) config {
 	props := properties.MustLoadFile(filename, properties.UTF8)
 
-	var serverConfig serverConfig
-	err := props.Decode(&serverConfig)
+	var config config
+	err := props.Decode(&config)
 	fatalErr(err)
 
-	return serverConfig
+	return config
 }
