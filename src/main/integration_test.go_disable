@@ -1,0 +1,39 @@
+package main
+
+import (
+	"testing"
+)
+
+func Test_checkReputation_noPath(t *testing.T) {
+	t.Log("TEST 6 - mock test for reputation lookup with no path")
+
+	// set parsedUrl
+	var parsedUrl candidateUrl
+	parsedUrl.fqdn = "get.dogecoin.com"
+
+	reputation := checkReputation(parsedUrl)
+
+	if reputation == "unsafe" {
+		t.Log("PASS - lookup for fqdn successfully returns reputation")
+	} else {
+		t.Error("FAIL - lookup for fqdn does not return expected reputation")
+	}
+}
+
+func Test_checkMixedReputation(t *testing.T) {
+	t.Log("TEST 7 - mock test for reputation lookup with path")
+
+	// set parsedUrl
+	var parsedUrl candidateUrl
+	parsedUrl.fqdn = "www.megaupload.com"
+	parsedUrl.path = "/files/not_a_virus"
+
+	db := getDbConn()
+	reputation := checkMixedReputation(parsedUrl, db)
+
+	if reputation == "safe" {
+		t.Log("PASS - lookup for fqdn and path successfully returns reputation")
+	} else {
+		t.Error("FAIL - lookup for fqdn and path does not return reputation")
+	}
+}

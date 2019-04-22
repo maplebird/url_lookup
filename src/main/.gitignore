@@ -1,2 +1,4 @@
 # Ignore compiled binary
 main
+bin
+bin/*
