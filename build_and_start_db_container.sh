@@ -32,7 +32,7 @@ sleep 30
 # Make sure `mysql` binary is installed on your system
 # Should really be handled by flyway
 echo "Testing database connection."
-if ! mysql -h 127.0.0.1 -uroot -ppassword -e "show databases;"; then
+if ! mysql -h 127.0.0.1 -uroot -p${MYSQL_ROOT_PASSWORD} -e "show databases;"; then
     echo "Could not connect to database.  Most likely container did not start in time."
     echo "Try increasing timeout above to a larger value, like 60 seconds."
     exit 1
@@ -44,5 +44,4 @@ else
         mysql -h 127.0.0.1 -uroot -p${MYSQL_ROOT_PASSWORD} < ${MIGRATION}
     done
 fi
-
-
+echo "Database migrations completed successfully."

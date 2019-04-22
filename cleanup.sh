@@ -1,10 +1,15 @@
 #!/usr/bin/env bash
 
-# Delete MySQL container
-if docker ps -af name=url_lookup_db | grep url_lookup_db; then
-    CONTAINER_ID=$(docker ps -a -f name=url_lookup_db | grep url_lookup_db | awk '{print $1}')
-    docker stop ${CONTAINER_ID} || echo "Container already stopped"
-    docker rm ${CONTAINER_ID}
+# Delete MySQL and server containers
+echo "Stopping and deleting MySQL and server containers"
+if docker ps -af name=url_lookup | grep url_lookup; then
+    CONTAINER_IDS=$(docker ps -a -f name=url_lookup | grep url_lookup | awk '{print $1}')
+
+    for ID in ${CONTAINER_IDS}; do
+        docker stop ${ID} || echo "Container already stopped"
+        docker rm ${ID}
+    done
 fi
 
+# Remove compiled binary
 rm -f src/main/main
