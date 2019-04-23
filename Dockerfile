@@ -1,7 +1,11 @@
 FROM golang:latest
 
-WORKDIR /go/src/main
-COPY src/main/. .
+WORKDIR /go/src/url_lookup
+COPY src/main .
 
-RUN go get -d -v
+RUN go get -v
+RUN go test -v .
 RUN go install -v
+
+# Copy config.properties
+COPY src/main/config.properties /go/bin/

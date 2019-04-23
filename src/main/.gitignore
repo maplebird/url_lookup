@@ -1,4 +1,2 @@
 # Ignore compiled binary
-main
-bin
-bin/*
+url_lookup

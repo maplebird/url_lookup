@@ -11,7 +11,8 @@ echo "Stopping url_lookup_server container if running"
 if docker ps -af name=url_lookup_server | grep url_lookup_server; then
     CONTAINER_ID=$(docker ps -a -f name=url_lookup_server | grep url_lookup_server | awk '{print $1}')
     docker stop ${CONTAINER_ID} || echo "Container already stopped"
+    docker rm ${CONTAINER_ID}
 fi
 
 echo "Starting new url_lookup_server container"
-docker run --name url_lookup_server -p 5000:5000 --env URL_LOOKUP_DBHOST=${LOCAL_ADDRESS} -it url_lookup_server /go/bin/main
+docker run --name url_lookup_server -p 5000:5000 --env URL_LOOKUP_DBHOST=${LOCAL_ADDRESS} -it url_lookup_server /go/bin/url_lookup
