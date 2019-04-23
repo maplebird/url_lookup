@@ -8,4 +8,6 @@ RUN go test -v .
 RUN go install -v
 
 # Copy config.properties
-COPY src/main/config.properties /go/bin/
+COPY src/url_lookup/config.properties /go/bin/
+
+CMD /go/bin/url_lookup

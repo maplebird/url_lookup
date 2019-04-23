@@ -2,6 +2,10 @@
 
 set -ue
 
+# Build database and app containers
+./build_and_start_db_container.sh
+./build_app_container.sh
+
 # If database is running on non-standard port, pass URL_LOOKUP_DBPORT env variable to container
 URL_LOOKUP_DBPORT=${URL_LOOKUP_DBPORT:-3306}
 DBPORT_DOCKER_ENV_VAR_STRING=""
@@ -12,7 +16,7 @@ fi
 
 # Get local IPv4 that's not localhost
 # So server container can talk to a separate database container
-LOCAL_ADDRESS=$(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | awk '{print $2}' | grep -Ev '127(\D[0-9]{1,3}){3}')
+LOCAL_ADDRESS=$(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | awk '{print $2}' | grep -v '127.' | head -n1)
 
 # Stop previous instance of this container
 echo "Stopping url_lookup_server container if running"

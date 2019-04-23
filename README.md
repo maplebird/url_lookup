@@ -23,7 +23,9 @@ This was only tested using MySQL 5.7 and 8.0, however any version 5.1 and above 
 
 ## Easy option with Docker
 
-Make sure your docker daemon is started.
+Make sure your docker daemon is started, and local MySQL Server is stopped if running.
+Alternatively, set url_lookup to run on a non-standard MySQL port so there are no collisions 
+(see next section).
 
 ```bash
 ./build_and_start_db_container.sh
@@ -244,10 +246,3 @@ INSERT INTO path_lookup (fqdn, path, reputation) VALUES
 ('my-host.com', '/link/to/safe/object', 'safe'),
 ('my-host.com', '/link/to/unsafe/object', 'unsafe');
 ```
-
-# Random notes
-
-### Tabs vs. Spaces
-
-I'm a spaces guy, but my IDE saved all my tab strokes as tabs instead of 4 spaces, and I was too lazy to change it.
-
