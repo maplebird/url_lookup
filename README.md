@@ -66,12 +66,13 @@ export URL_LOOKUP_DBPORT=3307
 
 Then run the 3 scripts from the previous section.  No further work should be required.
 
-## Local server (not running in docker)
+## Local server (app server not running in docker)
 
-Make sure GoLang is installed (uses local directory for GOPATH to download dependencies and output binary)
+Make sure GoLang is installed (uses local directory for GOPATH to download dependencies and output binary).
 
 For database, either:
-* Configure database as per the the [Database setup](#database-setup) section.
+* Run `./build_and_start_db_container.sh` to start MySQL container with migrations (still requires Docker)
+* Configure database as per the the [Database setup](#database-setup) section if not using Docker at all.
 
 Run `./local_build.sh`
 
