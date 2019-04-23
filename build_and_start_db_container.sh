@@ -4,7 +4,7 @@ set -ue
 
 # Set MySQL root pw
 MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-password}
-MYSQL_HOST_PORT=${URL_LOOKUP_DBPORT-:3306}
+MYSQL_HOST_PORT=${URL_LOOKUP_DBPORT:-3306}
 
 # Run MySQL in docker
 if ! docker images | grep mysql; then
