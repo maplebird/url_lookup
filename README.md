@@ -53,6 +53,19 @@ Cleanup at the end by running `./cleanup.sh`.
 This will delete any new docker images or running containers
 (with the exception of public `mysql` and `golang` images)
 
+### If you have a running MySQL server on your server/workstation
+
+You can set test environment to spawn a database container on a non-standard port 
+and have the server container automatically connect to it.
+
+To do this, just set this environment variable in the same shell session:
+
+```bash
+export URL_LOOKUP_DBPORT=3307 
+``` 
+
+Then run the 3 scripts from the previous section.  No further work should be required.
+
 ## Local server (no Docker)
 
 Make sure GoLang is installed (does not require separate GOPATH to be configured, as it uses local directory for GOPATH)

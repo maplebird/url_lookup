@@ -4,6 +4,7 @@ set -ue
 
 # Set MySQL root pw
 MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-password}
+MYSQL_HOST_PORT=${URL_LOOKUP_DBPORT-:3306}
 
 # Run MySQL in docker
 if ! docker images | grep mysql; then
@@ -23,7 +24,7 @@ if docker ps -af name=url_lookup_db | grep url_lookup_db; then
 fi
 
 # Start new database instance
-docker run --name url_lookup_db -p 3306:3306 -e MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD} -d mysql
+docker run --name url_lookup_db -p ${MYSQL_HOST_PORT}:3306 -e MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD} -d mysql
 
 # Give MySQL time to start
 sleep 30
@@ -32,7 +33,7 @@ sleep 30
 # Make sure `mysql` binary is installed on your system
 # Should really be handled by flyway
 echo "Testing database connection."
-if ! mysql -h 127.0.0.1 -uroot -p${MYSQL_ROOT_PASSWORD} -e "show databases;"; then
+if ! mysql -h 127.0.0.1 -P ${MYSQL_HOST_PORT} -u root -p${MYSQL_ROOT_PASSWORD} -e "show databases;"; then
     echo "Could not connect to database.  Most likely container did not start in time."
     echo "Try increasing timeout above to a larger value, like 60 seconds."
     exit 1
@@ -41,7 +42,7 @@ else
     MIGRATIONS=$(ls migrations/*.sql)
     for MIGRATION in ${MIGRATIONS}; do
         echo "Running database schema migration ${MIGRATION}"
-        mysql -h 127.0.0.1 -uroot -p${MYSQL_ROOT_PASSWORD} < ${MIGRATION}
+        mysql -h 127.0.0.1 -P ${MYSQL_HOST_PORT} -uroot -p${MYSQL_ROOT_PASSWORD} < ${MIGRATION}
     done
 fi
 echo "Database migrations completed successfully."

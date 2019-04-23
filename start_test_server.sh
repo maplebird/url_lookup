@@ -2,6 +2,14 @@
 
 set -ue
 
+# If database is running on non-standard port, pass URL_LOOKUP_DBPORT env variable to container
+URL_LOOKUP_DBPORT=${URL_LOOKUP_DBPORT:-3306}
+DBPORT_DOCKER_ENV_VAR_STRING=""
+
+if [[ ${URL_LOOKUP_DBPORT} -ne 3306 ]]; then
+    DBPORT_DOCKER_ENV_VAR_STRING="--env URL_LOOKUP_DBPORT=${URL_LOOKUP_DBPORT}"
+fi
+
 # Get local IPv4 that's not localhost
 # So server container can talk to a separate database container
 LOCAL_ADDRESS=$(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | awk '{print $2}' | grep -Ev '127(\D[0-9]{1,3}){3}')
@@ -15,4 +23,10 @@ if docker ps -af name=url_lookup_server | grep url_lookup_server; then
 fi
 
 echo "Starting new url_lookup_server container"
-docker run --name url_lookup_server -p 5000:5000 --env URL_LOOKUP_DBHOST=${LOCAL_ADDRESS} -it url_lookup_server /go/bin/url_lookup
+docker run \
+    --name url_lookup_server \
+    -p 5000:5000 \
+    --env URL_LOOKUP_DBHOST=${LOCAL_ADDRESS} \
+    ${DBPORT_DOCKER_ENV_VAR_STRING}  \
+    -it url_lookup_server \
+    /go/bin/url_lookup
