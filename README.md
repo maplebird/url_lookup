@@ -115,6 +115,18 @@ Alternatively, set any required environment variables before starting url_lookup
 * `URL_LOOKUP_DBUSER`
 * `URL_LOOKUP_DBPASSWORD`
 
+## Other configuration properties
+
+There are two more configuration properties:
+
+* `ServerAddress` - IP address to listen on.  Leave blank to listen on all interfaces.
+* `ServerPort` - default is 5000
+
+They can be set via these two environment variables:
+
+* `URL_LOOKUP_SERVER_ADDRESS`
+* `URL_LOOKUP_SERVER_PORT`
+
 ### Important note
 `url_analysis` only supports TCP connections to its database.
 It will not work with UNIX socket connections, even when running the database on localhost.
