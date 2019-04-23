@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -x
+set -eu
 
 HERE=$(pwd)
 export GOPATH=${HERE}
@@ -10,11 +10,11 @@ cd src/url_lookup
 go get -v
 
 # Run all tests, including integration tests
-# Docker build does not run integration.
+# Docker build does not run integration tests
 test() {
-    cp integration_test.go_disable integration_test.go
-    go test -v
-    rm integration_test.go
+    cp testPackage02_integration_test.go_disable testPackage02_integration_test.go
+    go test -v .
+    rm -f testPackage02_integration_test.go
 }
 
 echo "Running unit and integration tests"

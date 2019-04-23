@@ -16,14 +16,23 @@ This was tested using MySQL 5.7 and 8.0, however 5.6 should work fine.
  
 # Setting up a test environment
 
-## Easy option
+## Easy option with Docker
 
 Make sure your Docker daemon is started.
 
-In the main folder, run build_test_database.sh
-* You may need to run `docker login` and start your docker daemon before running this script
+```bash
+./build_and_start_db_container.sh
+./build_app_container.sh
+./start_test_server.sh
+```
 
-`./build_test_database.sh`
+Note you may need to run `docker login` and start your docker daemon before running this script,
+as it pulls some dependencies
+
+These 3 scripts will:
+* Build and start test database container, then run schema migrations against it (including populating it with some test data)
+* Build url_lookup_server app container
+* Start the app container in the current terminal session (all logs will be output to STDOUT)
 
 If you do not wish to automatically create a test database, follow the steps to set up a database from the next section.
 
@@ -33,11 +42,12 @@ Start the test server.
 
 You should now be able to hit the API (see [Using URL Lookup](#using-url_lookup) for instructions)
 
-Make sure to cleanup at the end by running `./cleanup.sh`.  This will delete any build artifacts and test database container.
+Cleanup at the end by running `./cleanup.sh`.  This will delete any build artifacts and test database container.
 
 ## Database setup if not using Docker script.
 
-Follow the steps below to configure database required for url_lookup if not using test Docker database
+Follow the steps below to configure database required for url_lookup if not using automatically created test Docker database
+or running a remote DB instance.
 
 * Make sure MySQL is started on the db host (tested with 5.7 and 8.0, however previous versions should work fine).
 * Run all `.sql` scripts in `src/migrations` against the database in question
@@ -51,15 +61,25 @@ done
 
 Where HOST is your database host and USER is your database user.
 
+You then need to point the server against this DB instance.
+
 If you wish to use a database on a remote host or non-standard port, update `src/main/config.properties` with your configuration
 
 ```
-Host = 127.0.0.1
-Port = 3306
-Schema = url_lookup
-User = url_lookup_ro
-Password = password
+DBHost = 127.0.0.1
+DBPort = 3306
+DBSchema = url_lookup
+DBUser = url_lookup_ro
+DBPassword = password
 ```
+
+Alternatively, set the following environment variables:
+
+* `URL_LOOKUP_DBHOST`
+* `URL_LOOKUP_DBPORT`
+* `URL_LOOKUP_DBSCHEMA`
+* `URL_LOOKUP_DBUSER`
+* `URL_LOOKUP_DBPASSWORD`
 
 ### Important note
 `url_analysis` only supports TCP connections to its database.

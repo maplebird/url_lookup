@@ -11,5 +11,8 @@ if docker ps -af name=url_lookup | grep url_lookup; then
     done
 fi
 
-# Remove compiled binary
-rm -f src/main/main
+# Remove compiled binary if it exists
+rm -f src/main/url_lookup
+
+#
+rm -rf

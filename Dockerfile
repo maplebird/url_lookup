@@ -1,7 +1,7 @@
 FROM golang:latest
 
 WORKDIR /go/src/url_lookup
-COPY src/main .
+COPY src/url_lookup .
 
 RUN go get -v
 RUN go test -v .

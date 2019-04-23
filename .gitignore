@@ -1,7 +1,14 @@
+# JetBrains and OS X files
 .idea
 .idea/
 .idea/*
 **/.DS_Store
 *.iml
-server.log
-nohup.out
+
+# Compiled binaries
+bin/*
+bin
+
+# Go Dependencies (installed under src/ when building project locally)
+src/github.com
+src/github.com/*

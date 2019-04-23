@@ -38,7 +38,7 @@ if ! mysql -h 127.0.0.1 -uroot -p${MYSQL_ROOT_PASSWORD} -e "show databases;"; th
     exit 1
 else
     echo "Successfully connected to test database.  Executing migrations."
-    MIGRATIONS=$(ls src/migrations/*.sql)
+    MIGRATIONS=$(ls migrations/*.sql)
     for MIGRATION in ${MIGRATIONS}; do
         echo "Running database schema migration ${MIGRATION}"
         mysql -h 127.0.0.1 -uroot -p${MYSQL_ROOT_PASSWORD} < ${MIGRATION}
