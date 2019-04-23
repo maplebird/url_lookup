@@ -3,22 +3,27 @@
 I used this as an excuse to learn GoLang :)
 
 # Requirements
+
+## Docker test environment
+
  * Linux or OS X
  * Docker
+ * MySQL binary (just `mysql` executable), do not need full server
+
+This is the recommended way for local testing, as it only requires 3 shell scripts to be executed.
+
+## Local server
+ * Linux or OS X
  * GoLang
- * MySQL binary (do not need MySQL server, just `mysql` CLI executable)
+ * MySQL server
  
-If not using test docker database or a local MySQL server, the only requirement is Linux/OS X with installed GoLang.
+This was only tested using MySQL 5.7 and 8.0, however any version 5.1 and above should work fine.
 
-Make sure to configure remote database using the steps in its corresponding section.
-
-This was tested using MySQL 5.7 and 8.0, however 5.6 should work fine.
- 
 # Setting up a test environment
 
 ## Easy option with Docker
 
-Make sure your Docker daemon is started.
+Make sure your docker daemon is started.
 
 ```bash
 ./build_and_start_db_container.sh
@@ -26,8 +31,10 @@ Make sure your Docker daemon is started.
 ./start_test_server.sh
 ```
 
-Note you may need to run `docker login` and start your docker daemon before running this script,
-as it pulls some dependencies
+Note you may need to run `docker login` and start your docker daemon before running these script,
+as they pull dependencies.
+
+Alternatively make sure you have `mysql` and `golang` images already installed.
 
 These 3 scripts will:
 * Build and start test database container, then run schema migrations against it (including populating it with some test data)
@@ -42,28 +49,41 @@ Start the test server.
 
 You should now be able to hit the API (see [Using URL Lookup](#using-url_lookup) for instructions)
 
-Cleanup at the end by running `./cleanup.sh`.  This will delete any build artifacts and test database container.
+Cleanup at the end by running `./cleanup.sh`.
+This will delete any new docker images or running containers
+(with the exception of public `mysql` and `golang` images)
 
-## Database setup if not using Docker script.
+## Local server (no Docker)
+
+Make sure GoLang is installed (does not require separate GOPATH to be configured, as it uses local directory for GOPATH)
+
+Configure database as per the the [Database setup](#database-setup) section.
+
+Run `./local_build.sh`
+
+This will download any required dependencies to src/, run unit and integration tests, and finally start test server
+in the current terminal session.
+
+## Database setup
 
 Follow the steps below to configure database required for url_lookup if not using automatically created test Docker database
 or running a remote DB instance.
 
-* Make sure MySQL is started on the db host (tested with 5.7 and 8.0, however previous versions should work fine).
+* Make sure MySQL is started on the db host (tested on OS X with MySQL 5.7).
 * Run all `.sql` scripts in `src/migrations` against the database in question
-* Either execute them directly in the database shell, or run them as follows:
+* Either execute them in the database shell, or run them as follows:
 
 ```bash
-for SQL in $(ls src/migrations/*.sql); do
+for SQL in $(ls migrations/*.sql); do
     mysql -h HOST -u USER -p < ${SQL}
 done
 ```
 
-Where HOST is your database host and USER is your database user.
+Where HOST is your database host (`127.0.0.1` for local server) and USER is your admin database user.
 
 You then need to point the server against this DB instance.
 
-If you wish to use a database on a remote host or non-standard port, update `src/main/config.properties` with your configuration
+Update `src/url_lookup/config.properties` with database configuration.  Default configuration is shown below:
 
 ```
 DBHost = 127.0.0.1
@@ -73,7 +93,7 @@ DBUser = url_lookup_ro
 DBPassword = password
 ```
 
-Alternatively, set the following environment variables:
+Alternatively, set any required environment variables before starting url_lookup server:
 
 * `URL_LOOKUP_DBHOST`
 * `URL_LOOKUP_DBPORT`

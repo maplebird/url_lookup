@@ -5,6 +5,9 @@ set -eu
 HERE=$(pwd)
 export GOPATH=${HERE}
 
+# Clean up old builds
+rm -rf bin
+
 # Build
 cd src/url_lookup
 go get -v
