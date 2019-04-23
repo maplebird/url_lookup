@@ -7,7 +7,7 @@ CREATE TABLE url_lookup.fqdns (
     PRIMARY KEY (fqdn)
 );
 
-CREATE TABLE url_lookup.path_lookup (
+CREATE TABLE url_lookup.lookup_paths (
     id int NOT NULL AUTO_INCREMENT,
     fqdn VARCHAR(200) NOT NULL,
     path VARCHAR(200),

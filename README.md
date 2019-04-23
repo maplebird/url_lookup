@@ -24,21 +24,19 @@ This was only tested using MySQL 5.7 and 8.0, however any version 5.1 and above 
 ## Easy option with Docker
 
 Make sure your docker daemon is started, and local MySQL Server is stopped if running.
+
 Alternatively, set url_lookup to run on a non-standard MySQL port so there are no collisions 
-(see next section).
+(see [next section](run-mysql-on-non-standard-port)).
+
+You may also need to run `docker login` first.
+
+Run wrapper script that will build app and db containers and then start test server:
 
 ```bash
-./build_and_start_db_container.sh
-./build_app_container.sh
-./start_test_server.sh
+./wrapper.sh
 ```
 
-Note you may need to run `docker login` and start your docker daemon before running these script,
-as they pull dependencies.
-
-Alternatively make sure you have `mysql` and `golang` images already installed.
-
-These 3 scripts will:
+There are 3 scripts under wrapper.sh will:
 * Build and start test database container, then run schema migrations against it (including populating it with some test data)
 * Build url_lookup_server app container
 * Start the app container in the current terminal session (all logs will be output to STDOUT)
@@ -55,12 +53,12 @@ Cleanup at the end by running `./cleanup.sh`.
 This will delete any new docker images or running containers
 (with the exception of public `mysql` and `golang` images)
 
-### If you have a running MySQL server on your server/workstation
+### Run MySQL on non-standard port 
 
 You can set test environment to spawn a database container on a non-standard port 
 and have the server container automatically connect to it.
 
-To do this, just set this environment variable in the same shell session:
+To do this, just set this environment variable before running `wrapper.sh`:
 
 ```bash
 export URL_LOOKUP_DBPORT=3307 
@@ -68,11 +66,12 @@ export URL_LOOKUP_DBPORT=3307
 
 Then run the 3 scripts from the previous section.  No further work should be required.
 
-## Local server (no Docker)
+## Local server (not running in docker)
 
-Make sure GoLang is installed (does not require separate GOPATH to be configured, as it uses local directory for GOPATH)
+Make sure GoLang is installed (uses local directory for GOPATH to download dependencies and output binary)
 
-Configure database as per the the [Database setup](#database-setup) section.
+For database, either:
+* Configure database as per the the [Database setup](#database-setup) section.
 
 Run `./local_build.sh`
 
@@ -86,6 +85,7 @@ or running a remote DB instance.
 
 * Make sure MySQL is started on the db host (tested on OS X with MySQL 5.7).
 * Run all `.sql` scripts in `src/migrations` against the database in question
+* DB must allow TCP connections other than from 127.0.0.1 (i.e. listen on local IPv4) if using docker app server
 * Either execute them in the database shell, or run them as follows:
 
 ```bash

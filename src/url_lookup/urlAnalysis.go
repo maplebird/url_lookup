@@ -65,7 +65,7 @@ func checkReputation(parsedUrl candidateUrl) (reputation string) {
 
 func checkMixedReputation(parsedUrl candidateUrl, db *sql.DB) (reputation string) {
 	var query = fmt.Sprintf(
-		"SELECT reputation FROM path_lookup WHERE fqdn = '%s' AND path = '%s'",
+		"SELECT reputation FROM lookup_paths WHERE fqdn = '%s' AND path = '%s'",
 		parsedUrl.fqdn, parsedUrl.path)
 
 	err := db.QueryRow(query).Scan(&reputation)
