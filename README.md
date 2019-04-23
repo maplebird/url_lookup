@@ -36,16 +36,12 @@ Run wrapper script that will build app and db containers and then start test ser
 ./wrapper.sh
 ```
 
-There are 3 scripts under wrapper.sh will:
+If you do not wish to automatically create a test database, follow the steps to set up a database from the next section.
+
+There are 3 scripts chained under wrapper.sh that will:
 * Build and start test database container, then run schema migrations against it (including populating it with some test data)
 * Build url_lookup_server app container
 * Start the app container in the current terminal session (all logs will be output to STDOUT)
-
-If you do not wish to automatically create a test database, follow the steps to set up a database from the next section.
-
-Start the test server.
-
-`./start_test_server.sh`
 
 You should now be able to hit the API (see [Using URL Lookup](#using-url_lookup) for instructions)
 
@@ -58,13 +54,15 @@ This will delete any new docker images or running containers
 You can set test environment to spawn a database container on a non-standard port 
 and have the server container automatically connect to it.
 
+This can be useful if you already have MySQL server running on the host and experience port collisions.
+
 To do this, just set this environment variable before running `wrapper.sh`:
 
 ```bash
 export URL_LOOKUP_DBPORT=3307 
 ``` 
 
-Then run the 3 scripts from the previous section.  No further work should be required.
+No further work should be required.
 
 ## Local server (app server not running in docker)
 
@@ -85,17 +83,17 @@ Follow the steps below to configure database required for url_lookup if not usin
 or running a remote DB instance.
 
 * Make sure MySQL is started on the db host (tested on OS X with MySQL 5.7).
-* Run all `.sql` scripts in `src/migrations` against the database in question
+* Run all `.sql` scripts in `src/migrations` against the database server
 * DB must allow TCP connections other than from 127.0.0.1 (i.e. listen on local IPv4) if using docker app server
 * Either execute them in the database shell, or run them as follows:
 
 ```bash
 for SQL in $(ls migrations/*.sql); do
-    mysql -h HOST -u USER -p < ${SQL}
+    mysql -h ${HOST} -u ${USER} -p < ${SQL}
 done
 ```
 
-Where HOST is your database host (`127.0.0.1` for local server) and USER is your admin database user.
+Where HOST is your database host (default `127.0.0.1` for local server) and USER is your admin database user.
 
 You then need to point the server against this DB instance.
 
@@ -127,16 +125,16 @@ URL lookup is a simple REST API accessible via HTTP GET that provides reputation
 
 Reputation comes in 4 categories:
 
-* Known safe.  Websites that are known good and can be considered free of malware or questionable content.
-* Known unsafe.  Websites that are known bad and generally have a large amount of malware or host questionable content.
-* Mixed.  Generally, websites that are not necessarily malicious, but can be used to host malicious data
+* `safe` - known safe.  Websites that are known good and can be considered free of malware or questionable content.
+* `unsafe` - known unsafe.  Websites that are known bad and generally have a large amount of malware or host questionable content.
+* `mixed` - websites that are not necessarily malicious, but can be used to host malicious data
   * When querying mixed reputation websites, full URL path is checked
   * An example of a mixed reputation website is a file hosting service such as www.megaupload.com
     * Some files on it can be safe, some can be unsafe.
     * For example, querying www.megaupload.com/files/not_a_virus would return a safe reputation
     * Querying www.megaupload.com/files/my_virus would return an unsafe reputation
     * If reputation of a specific path on a mixed-reputation website is unknown, url_lookup shows mixed reputation
-* Unknown.  Websites that are not in the url_lookup database.
+* `unknown` - websites that are not in the url_lookup database.
 
 By default, it is configured to listen on port 5000 and can be accessed as such.
 
@@ -199,7 +197,7 @@ but provides little tangible benefit.
 
 ### Managing the database
 
-Current schema is very simple, with only two tables: `fqdns`, and `path_lookup`.
+Current schema is very simple, with only two tables: `fqdns`, and `lookup_paths`.
 
 `fqdns` table stores a list of any websites using their fully-qualified domain names 
 (host.domain-name.TLD), and reputation.
@@ -216,7 +214,7 @@ Schema looks like this:
 +--------------------+------------+
 ```
 
-`path_lookup` stores a list of full object paths for any FQDNs defined in `fqdns` with a mixed reputation.
+`lookup_paths` stores a list of full object paths for any FQDNs defined in `fqdns` with a mixed reputation.
 
 ```
 +----+--------------------+--------------------+------------+
