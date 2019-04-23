@@ -5,7 +5,7 @@ import (
 )
 
 func Test_checkReputation_noPath(t *testing.T) {
-	t.Log("TEST 6 - mock test for reputation lookup with no path")
+	t.Log("TEST 6 - mock test for reputation lookup with no path function")
 
 	// set parsedUrl
 	var parsedUrl candidateUrl
@@ -21,7 +21,7 @@ func Test_checkReputation_noPath(t *testing.T) {
 }
 
 func Test_checkMixedReputation(t *testing.T) {
-	t.Log("TEST 7 - mock test for reputation lookup with path")
+	t.Log("TEST 7 - mock test for reputation lookup with path function")
 
 	// set parsedUrl
 	var parsedUrl candidateUrl
@@ -35,5 +35,44 @@ func Test_checkMixedReputation(t *testing.T) {
 		t.Log("PASS - lookup for fqdn and path successfully returns reputation")
 	} else {
 		t.Error("FAIL - lookup for fqdn and path does not return reputation")
+	}
+}
+
+func Test_lookupUrl_noPath(t *testing.T) {
+	t.Log("TEST 8 - mock test for full url lookup with no path function")
+
+	requestedUrl := "www.github.com"
+	reputation := lookupUrl(requestedUrl)
+
+	if reputation == "safe" {
+		t.Log("PASS - lookup for url with no path successfully returns reputation")
+	} else {
+		t.Error("FAIL - lookup for url with no path does not return reputation")
+	}
+}
+
+func Test_lookupUrl_withPath(t *testing.T) {
+	t.Log("TEST 9 - mock test for full url lookup with path function")
+
+	requestedUrl := "www.megaupload.com/files/not_a_virus"
+	reputation := lookupUrl(requestedUrl)
+
+	if reputation == "safe" {
+		t.Log("PASS - lookup for url with path successfully returns reputation")
+	} else {
+		t.Error("FAIL - lookup for url with path does not return reputation")
+	}
+}
+
+func Test_lookupUrl_unknownUrl(t *testing.T) {
+	t.Log("TEST 10 - mock test for unknonw url lookup")
+
+	requestedUrl := "jkljkljkljkl.jkljklfjdasl.com"
+	reputation := lookupUrl(requestedUrl)
+
+	if reputation == "unknown" {
+		t.Log("PASS - lookup for random URL successfully returns 'unknown' reputation")
+	} else {
+		t.Error("FAIL - lookup for random URL does not return 'unknown' reputation")
 	}
 }

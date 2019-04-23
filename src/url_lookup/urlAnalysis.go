@@ -53,7 +53,7 @@ func checkReputation(parsedUrl candidateUrl) (reputation string) {
 		log.Println("URL is unsafe")
 	case "mixed":
 		// In case of mixed reputation, need to check both domain and path to the object being retrieved
-		log.Println("Reputation for this domain is mixed, checking path_lookup table")
+		log.Println("Reputation for this domain is mixed, checking lookup_paths table")
 		reputation = checkMixedReputation(parsedUrl, db)
 	}
 
