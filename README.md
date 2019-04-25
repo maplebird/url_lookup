@@ -10,7 +10,7 @@ I used this as an excuse to learn GoLang :)
  * Docker
  * MySQL binary (just `mysql` executable), do not need full server
 
-This is the recommended way for local testing, as it only requires 3 shell scripts to be executed.
+This is the recommended way for local testing, as it only requires a single shell script to be executed.
 
 ## Local server
  * Linux or OS X
@@ -207,6 +207,20 @@ which can also be accessed in multiple ways (such as `https://foo.com`, `https:/
 `http://foo.com`).  This adds significant overhead when managing url_lookup database of website reputations 
 but provides little tangible benefit.
 
+### Test data
+
+3 URLs are included in test data:
+
+* www.github.com - safe
+* get.dogecoin.com - unsafe
+* www.megaupload.com - mixed
+  * www.megaupload.com/files/not_a_virus - safe
+  * www.megaupload.com/files/my_virus - unsafe
+  
+You can query one of them to check url_lookup API.
+
+Querying any other website will return an unkown reputation.
+
 ### Managing the database
 
 Current schema is very simple, with only two tables: `fqdns`, and `lookup_paths`.
@@ -247,13 +261,13 @@ INSERT INTO fqdns (fqdn, reputation) VALUES
 ('my-host.com', 'safe');
 ```
 
-Note that `fqdn` table can only store unique hostnames.  You cannot store two objects with fqdn `my-host.com`.
+Note that `fqdns` table can only store unique hostnames.  You cannot store two objects with fqdn `my-host.com`.
 
 If a website has a mixed reputation and you would like to configure multiple objects as safe of unsafe,
-you also need to add their reputations to `path_lookup` table.
+you also need to add their reputations to `lookup_paths` table.
 
 ```sql
-INSERT INTO path_lookup (fqdn, path, reputation) VALUES
+INSERT INTO lookup_paths (fqdn, path, reputation) VALUES
 ('my-host.com', '/link/to/safe/object', 'safe'),
 ('my-host.com', '/link/to/unsafe/object', 'unsafe');
 ```
